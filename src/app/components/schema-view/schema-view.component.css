@@ -1,0 +1,30 @@
+/*div.col, div.col-1, div.col-2 {*/
+/*  margin: 1vh;*/
+/*  border: #03AED2 2px solid;*/
+/*}*/
+
+div.row {
+  margin: 1vh;
+  border: #03AED2 2px solid;
+  font-size: large;
+}
+
+div.row:hover {
+  background-color: #FEEFAD;
+  border: #FDDE55 2px solid;
+  color: #03AED2;
+  cursor: pointer;
+}
+
+div.head, div.head:hover {
+  border: #FDDE55 2px solid;
+  background-color: #FDDE55;
+  color: #03AED2;
+  font-weight: 700;
+  font-size: x-large;
+  cursor: default;
+}
+
+.row {
+  overflow-x: auto;
+}

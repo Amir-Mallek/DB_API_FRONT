@@ -1,0 +1,20 @@
+<h1 class="p-3">{{ schema }}</h1>
+<div class="container m-2">
+  <div class="row rounded head">
+    <div class="col">Table</div>
+    <div class="col-1">Rows</div>
+    <div class="col-1">Size</div>
+    <div class="col-2">Created</div>
+    <div class="col-2">Updated</div>
+  </div>
+  @for (table of tables; track table.name) {
+    <div class="row rounded" (click)="selectTable(table.name)">
+      <div class="col rounded">{{ table.name }}</div>
+      <div class="col-1">{{ table.nbRows }}</div>
+      <div class="col-1">{{ table.sizeInBits | tableSize }}</div>
+      <div class="col-2">{{ table.createdAt | date }}</div>
+      <div class="col-2">{{ table.updatedAt | date }}</div>
+    </div>
+  }
+</div>
+<!--<router-outlet></router-outlet>-->

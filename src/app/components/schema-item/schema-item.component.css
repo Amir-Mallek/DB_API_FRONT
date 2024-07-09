@@ -1,0 +1,47 @@
+li {
+  position: relative;
+  border: none;
+  opacity: .6;
+  font-weight: 500;
+  font-size: xx-large;
+}
+
+li:hover {
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity .3s ease;
+}
+
+li:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 2px;
+  height: 100%;
+  width: 2px;
+  background: black;
+  opacity: .2;
+  transform: scaleY(.7);
+}
+
+
+li:hover:before {
+  width: 3px;
+  opacity: 1;
+  transition: transform .3s ease, opacity .3s ease, width .3s ease;
+}
+
+
+li.selected {
+  color: #03AED2;
+  opacity: 1;
+  font-weight: 600;
+}
+
+li.selected:before {
+  background: #03AED2;
+  width: 3px;
+  opacity: 1;
+  transform: scaleY(.9);
+  transition: transform .3s ease, width .3s ease;
+}
