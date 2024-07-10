@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {DbConnectionService} from "./db-connection.service";
-import {SelectDto} from "../model/dtos/SelectDto";
 import {Table} from "../model/Table";
+import {Observable} from "rxjs";
+import {SelectResponse} from "../model/response/SelectResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +68,7 @@ export class DbManagerService {
     return tables;
   }
 
-  getColumns(schema: string, table: string): string[] {
-    let columns: string[] = [];
+  getColumns(schema: string, table: string): Observable<SelectResponse> {
     const query = {
       cols: [
         'COLUMN_NAME'
@@ -105,14 +105,12 @@ export class DbManagerService {
         }
       }
     }
-    this.dbc.fetch(query, 'INFORMATION_SCHEMA', 'COLUMNS').subscribe(
-      (response) => {
-        for (let row of response.data) {
-          columns.push(row['COLUMN_NAME']);
-        }
-      }
-    );
-    return columns;
+    return this.dbc.fetch(query, 'INFORMATION_SCHEMA', 'COLUMNS');
+  }
+
+  getAllRows(schema: string, table: string): Observable<SelectResponse> {
+    const query = { cols: [ '*' ] };
+    return this.dbc.fetch(query, schema, table);
   }
 
 }

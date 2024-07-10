@@ -12,12 +12,23 @@ export class TableViewComponent {
   @Input() schema = '';
   @Input() tableName = '';
   columns: string[] = [];
+  allRows: any[] = [];
 
-  constructor(private manager: DbManagerService) {
-  }
+  constructor(private manager: DbManagerService) { }
 
   ngOnChanges() {
-    this.columns = this.manager.getColumns(this.schema, this.tableName);
-    console.log(this.columns);
+    this.manager.getColumns(this.schema, this.tableName).subscribe(
+      (response) => {
+        for (let row of response.data) {
+          this.columns.push(row['COLUMN_NAME']);
+        }
+      }
+    );
+    this.manager.getAllRows(this.schema, this.tableName).subscribe(
+      (response) => {
+        this.allRows = response.data;
+      }
+    );
   }
+
 }

@@ -1,0 +1,15 @@
+tr.table-row:nth-child(even) {
+  background-color: #68D2E8;
+}
+
+tr.table-row:nth-child(odd) {
+  background-color: #cfebf1;
+}
+
+th, td {
+  border-right: var(--bs-border-color) 1px solid;
+}
+
+th {
+  text-align: center;
+}
