@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Router, RouterOutlet} from "@angular/router";
-import {Table} from "../../model/Table";
+import {Table} from "../../model/table";
 import {DbManagerService} from "../../services/db-manager.service";
 import {DatePipe} from "@angular/common";
 import {TableSizePipe} from "../../pipes/table-size-pipe";
@@ -27,7 +27,11 @@ export class SchemaViewComponent {
   ) { }
 
   ngOnChanges() {
-    this.tables = this.manager.getTables(this.schema);
+    this.manager.getTables(this.schema).subscribe(
+      (response) => {
+        this.tables = response;
+      }
+    );
   }
 
   selectTable(tableName: string) {

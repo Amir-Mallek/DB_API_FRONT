@@ -13,13 +13,19 @@ import {DbManagerService} from "../../services/db-manager.service";
   styleUrl: './schema-list.component.css'
 })
 export class SchemaListComponent {
-  schemas: string[];
+  schemas: string[] = [];
 
   constructor(
     private selectedSchema: SelectSchemaService,
     private manager: DbManagerService
-  ) {
-    this.schemas = this.manager.getSchemas();
+  ) { }
+
+  ngOnInit() {
+    this.manager.getSchemas().subscribe(
+      (response) => {
+        this.schemas = response;
+      }
+    );
   }
 
   getSelectedSchema() {

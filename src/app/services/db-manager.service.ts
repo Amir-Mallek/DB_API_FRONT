@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {DbConnectionService} from "./db-connection.service";
-import {Table} from "../model/Table";
-import {Observable} from "rxjs";
+import {Table} from "../model/table";
+import {map, Observable} from "rxjs";
 import {SelectResponse} from "../model/response/SelectResponse";
+import {Column} from "../model/column";
 
 @Injectable({
   providedIn: 'root'
@@ -10,107 +11,67 @@ import {SelectResponse} from "../model/response/SelectResponse";
 export class DbManagerService {
   constructor(private dbc: DbConnectionService) { }
 
-  getSchemas(): string[] {
-    let schemas: string[] = [];
-    const query = {
-      cols: ["SCHEMA_NAME"]
-    }
-    this.dbc.fetch(query, 'INFORMATION_SCHEMA', 'SCHEMATA').subscribe(
-      (response) => {
-        for (let row of response.data) {
-          schemas.push(row['SCHEMA_NAME']);
-        }
-      }
-    );
-    return schemas;
+  private getType(type: string): string {
+    if (type == 'date' || type == 'time')  return type;
+    if (type == 'datetime') return 'datetime-local';
+    return 'text';
   }
 
-  getTables(schema: string): Table[] {
-    let tables: Table[] = [];
-    const query = {
-      cols: [
-        'TABLE_NAME',
-        'TABLE_ROWS',
-        'DATA_LENGTH',
-        'INDEX_LENGTH',
-        'CREATE_TIME',
-        'UPDATE_TIME'
-      ],
-      where: {
-        type: 'condition',
-        op1: {
-          type: 'column',
-          name: 'TABLE_SCHEMA'
-        },
-        op2: {
-          type: 'value',
-          value: schema
-        },
-        operator: '='
-      },
-      orderBy: {
-        'TABLE_NAME': true
-      }
-    }
-    this.dbc.fetch(query, 'INFORMATION_SCHEMA', 'TABLES').subscribe(
-      (response) => {
+  getSchemas(): Observable<string[]> {
+    let schemas: string[] = [];
+    return this.dbc.showDb().pipe(
+      map((response) => {
+        let schemas: string[] = [];
+        for (let row of response.data) {
+          schemas.push(row['Database']);
+        }
+        return schemas;
+      })
+    );
+  }
+
+  getTables(schema: string): Observable<Table[]> {
+    return this.dbc.showTables(schema).pipe(
+      map((response) => {
+        let tables: Table[] = [];
         for (let row of response.data) {
           tables.push(new Table(
-            row['TABLE_NAME'],
-            row['CREATE_TIME'],
-            (row['UPDATE_TIME']) ? row['UPDATE_TIME'] : row['CREATE_TIME'],
-            (row['TABLE_ROWS']) ? row['TABLE_ROWS'] : 0,
-            row['DATA_LENGTH'] + row['INDEX_LENGTH']
+            row['Name'],
+            row['Create_time'],
+            (row['Update_time']) ? row['Update_time'] : row['Create_time'],
+            (row['Rows']) ? row['Rows'] : 0,
+            row['Data_length'] + row['Index_length']
           ));
         }
-      }
+        return tables;
+      })
     );
-    return tables;
   }
 
-  getColumns(schema: string, table: string): Observable<SelectResponse> {
-    const query = {
-      cols: [
-        'COLUMN_NAME'
-      ],
-      where: {
-        type: 'condition',
-        op1:{
-          type: 'condition',
-          op1: {
-            type: 'column',
-            name: 'TABLE_SCHEMA'
-          },
-          op2: {
-            type: 'value',
-            value: schema
-          },
-          operator: '='
-        },
-        op2: {
-          type: 'condition',
-          op1: {
-            type: 'column',
-            name: 'TABLE_NAME'
-          },
-          op2: {
-            type: 'value',
-            value: table
-          },
-          operator: '='
-        },
-        operator: 'AND',
-        orderBy: {
-          'ORDINAL_POSITION': true
+  getTableDescription(schema: string, table: string): Observable<Column[]> {
+    return this.dbc.describeTable(schema, table).pipe(
+      map((response) => {
+        let columns: Column[] = [];
+        for (let row of response.data) {
+          columns.push(new Column(
+            row['Field'],
+            this.getType(row['Type']),
+            row['Null'] == 'YES',
+            row['Key'] == 'PRI'
+          ));
         }
-      }
-    }
-    return this.dbc.fetch(query, 'INFORMATION_SCHEMA', 'COLUMNS');
+        return columns;
+      })
+    );
   }
 
-  getAllRows(schema: string, table: string): Observable<SelectResponse> {
+  getAllRows(schema: string, table: string): Observable<Record<string, any>[]> {
     const query = { cols: [ '*' ] };
-    return this.dbc.fetch(query, schema, table);
+    return this.dbc.fetch(query, schema, table).pipe(
+      map((response) => {
+          return response.data;
+      })
+    );
   }
 
 }

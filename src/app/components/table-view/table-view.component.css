@@ -13,3 +13,11 @@ th, td {
 th {
   text-align: center;
 }
+
+.cell {
+  background-color: inherit;
+}
+
+tr.modified {
+  background-color: green;
+}

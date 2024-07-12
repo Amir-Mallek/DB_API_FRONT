@@ -1,6 +1,6 @@
 <h1 class="p-3">{{ schema }} > {{ tableName }}</h1>
-<table class="table table-bordered">
-  <tr class="table-head rounded">
+<table class="table">
+  <tr class="table-head">
     <th>#</th>
     @for (column of columns; track column) {
       <th>{{ column }}</th>
@@ -8,9 +8,17 @@
   </tr>
   @for (row of allRows; track row; let i = $index) {
     <tr class="table-row">
-      <th class="row-nb">{{ i+1 }}</th>
+      <th class="row-nb" [class]="getRowClass(i)">{{ i+1 }}</th>
       @for (column of columns; track column) {
-        <td>{{ row[column] }}</td>
+        <td class="p-1">
+          <app-cell
+            class="cell"
+            [index]="i"
+            [originalValue]="row[column]"
+            [type]="columnTypes[column]"
+            (isModified)="handleModification($event)"
+          ></app-cell>
+        </td>
       }
     </tr>
   }

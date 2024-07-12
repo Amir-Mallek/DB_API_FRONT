@@ -1,0 +1,5 @@
+@if (!isExpanded) {
+  <span (dblclick)="expandInput()">{{ value }}</span>
+} @else {
+  <input type="{{ type }}" [(ngModel)]="value">
+}
