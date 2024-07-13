@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SelectResponse} from "../model/response/SelectResponse";
-import {DeleteResponse} from "../model/response/DeleteResponse";
+import {UpdateResponse} from "../model/response/UpdateResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,12 @@ export class DbConnectionService {
 
   remove(deleteQuery: any, schema: string, table: string) {
     const url = `http://localhost:8080/db-api/${schema}/${table}/delete`;
-    return this.http.patch<DeleteResponse>(url, deleteQuery);
+    return this.http.patch<UpdateResponse>(url, deleteQuery);
+  }
+
+  save(insertQuery: any, schema: string, table: string) {
+    const url = `http://localhost:8080/db-api/${schema}/${table}`;
+    return this.http.post<UpdateResponse>(url, insertQuery);
   }
 
   showDb() {

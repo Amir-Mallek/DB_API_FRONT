@@ -11,7 +11,7 @@ export const routes: Routes = [
     component: HomePageComponent
   },
   {
-    path: 'insert/:schema/:tableName',
+    path: 'insert/:schema/:table',
     title: 'insert',
     component: InsertViewComponent
   },

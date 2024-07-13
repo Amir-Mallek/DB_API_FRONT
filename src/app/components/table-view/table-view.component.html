@@ -1,6 +1,9 @@
 <div class="d-flex flex-column" style="height: 100vh;">
   <div class="flex-grow-1 overflow-auto">
-    <h1 class="p-3">{{ schema }} > {{ tableName }}</h1>
+    <h1 class="p-3">
+      <a routerLink="/{{ schema }}"> {{ schema }}</a>
+      > {{ tableName }}
+    </h1>
     <table class="table">
       <tr class="table-head">
         <th>❌</th>
@@ -32,24 +35,30 @@
     </table>
   </div>
 
-  <div class="container mb-4">
+  <div class="container m-4">
     <div class="row">
-      <div class="col-3">
-        <div class="input-group">
-          <span class="input-group-text">Number of rows</span>
-          <input type="number" class="form-control">
+      <div class="col-4">
+
+        <div class="row">
+          <div class="input-group">
+            <span class="input-group-text">Number of rows</span>
+            <input type="number" class="form-control">
+          </div>
         </div>
+
+        <div class="row my-3">
+          <div class="col">
+            <button class="btn btn-info m-2" (click)="goToInsert()">Insert</button>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger m-2" (click)="deleteRows()">Delete</button>
+          </div>
+        </div>
+
       </div>
-    </div>
-    <div class="row">
-      <div class="col-2">
-        <button class="btn btn-info m-2" (click)="goToInsert()">Insert</button>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-warning m-2">Commit Changes</button>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-danger m-2" (click)="deleteRows()">Delete Selected</button>
+
+      <div class="col-5">
+        <app-query-result [success]="queryStatus" [message]="queryMessage"></app-query-result>
       </div>
     </div>
   </div>

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {DbConnectionService} from "./db-connection.service";
 import {Table} from "../model/table";
-import {map, Observable} from "rxjs";
+import {map, Observable, throwError} from "rxjs";
 import {Column} from "../model/column";
+import {UpdateResponse} from "../model/response/UpdateResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,8 @@ export class DbManagerService {
             row['Type'],
             row['Null'] == 'YES',
             row['Key'] == 'PRI',
-            row['Extra'] == 'auto_increment'
+            row['Extra'] == 'auto_increment',
+            (row['Default']) ? row['Default'] : 'NULL'
           ));
         }
         return columns;
@@ -98,19 +100,50 @@ export class DbManagerService {
     );
   }
 
+  insertValues(
+    schema: string,
+    table: string,
+    columns: Column[],
+    values: Record<string, string | null>
+  ): Observable<UpdateResponse> {
+    let row: Record<string, string | null> = {};
+    let columnNames: string[] = [];
+    for (let column of columns) {
+      columnNames.push(column.name);
+      row[column.name] = (values[column.name] == '') ?
+        null : values[column.name];
+    }
+    const query = {
+      cols: columnNames,
+      values: [row]
+    }
+
+    return this.dbc.save(query, schema, table).pipe(
+      map((response) => {
+        if (response.status == 'SUCCESS') {
+          return response;
+        }
+        throw new Error(response.message);
+      })
+    );
+  }
+
   deleteRows(
     schema: string,
     table: string,
     primValues: any[],
     primaryKey: string
-  ): Observable<boolean> {
+  ): Observable<UpdateResponse> {
     const query = {
       where: this.buildCondition(primValues, primaryKey, 0)
     };
 
     return this.dbc.remove(query, schema, table).pipe(
       map((response) => {
-        return response.status == 'SUCCESS';
+        if (response.status == 'SUCCESS') {
+          return response;
+        }
+        throw new Error(response.message);
       })
     );
   }

@@ -25,3 +25,22 @@ input[type=number] {
   -moz-appearance: textfield;
   appearance: none;
 }
+
+
+a {
+  color: black;
+  text-decoration-color: white;
+}
+
+a:hover {
+  text-decoration-color: black;
+  transition: text-decoration-color .3s ease;
+}
+
+button {
+  font-size: x-large;
+}
+
+span {
+  font-size: x-large;
+}

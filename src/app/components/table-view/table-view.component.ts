@@ -3,15 +3,18 @@ import {DbManagerService} from "../../services/db-manager.service";
 import {CellComponent} from "../cell/cell.component";
 import {Column} from "../../model/column";
 import {NgClass} from "@angular/common";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {TableDescriptionService} from "../../services/table-description.service";
+import {QueryResultComponent} from "../query-result/query-result.component";
 
 @Component({
   selector: 'app-table-view',
   standalone: true,
   imports: [
     CellComponent,
-    NgClass
+    NgClass,
+    RouterLink,
+    QueryResultComponent
   ],
   templateUrl: './table-view.component.html',
   styleUrl: './table-view.component.css'
@@ -24,6 +27,9 @@ export class TableViewComponent {
   allRows: Record<string, any>[] = [];
   rowsToModify: number[] = [];
   rowsToDelete: boolean[] = [];
+
+  queryStatus: boolean = false;
+  queryMessage: string = '';
 
   constructor(
     private manager: DbManagerService,
@@ -71,8 +77,16 @@ export class TableViewComponent {
       primValues,
       this.primaryKey
     ).subscribe(
-      (response) => {
-        console.log(response);
+      {
+        next: (r) => {
+          this.queryStatus = true;
+          this.queryMessage = r.message + ". " + r.affectedRows + ' row(s) affected.';
+        },
+        error: (e) => {
+          this.queryStatus = false;
+          this.queryMessage = e.message;
+        },
+        complete: () => 1
       }
     );
 

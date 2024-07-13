@@ -1,6 +1,6 @@
 import {DbResponse} from "./DbResponse";
 
-export class DeleteResponse extends DbResponse {
+export class UpdateResponse extends DbResponse {
   affectedRows: number;
 
   constructor(

@@ -1,4 +1,4 @@
-div.row {
+div.row.input-row {
   margin: 1vh;
   border: #03AED2 2px solid;
   font-size: large;
@@ -11,4 +11,18 @@ div.head {
   font-weight: 700;
   font-size: x-large;
   cursor: default;
+}
+
+button {
+  font-size: xx-large;
+}
+
+a {
+  color: black;
+  text-decoration-color: white;
+}
+
+a:hover {
+  text-decoration-color: black;
+  transition: text-decoration-color .3s ease;
 }
