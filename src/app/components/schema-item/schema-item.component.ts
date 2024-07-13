@@ -1,9 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {SelectSchemaService} from "../../services/select-schema.service";
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
-import {DbConnectionService} from "../../services/db-connection.service";
-import {SelectDto} from "../../model/dtos/SelectDto";
-
 
 @Component({
   selector: 'app-schema-item',
@@ -17,18 +14,24 @@ import {SelectDto} from "../../model/dtos/SelectDto";
 })
 export class SchemaItemComponent {
   @Input() name = '';
-  @Input() isSelected = false;
+  isSelected: boolean = false;
 
   constructor(
     private selectedSchema: SelectSchemaService,
     private router: Router,
-    private dbc: DbConnectionService
   ) { }
 
+  ngOnInit() {
+    this.selectedSchema.observable.subscribe(
+      (schema) => {
+        this.isSelected = (schema === this.name);
+      }
+    );
+  }
+
   selectSchema() {
+    this.selectedSchema.set(this.name);
     this.router.navigate([this.name]).then(() => {});
-    if (this.isSelected) return;
-    this.selectedSchema.name.set(this.name);
   }
 
 }

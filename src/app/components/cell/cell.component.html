@@ -1,5 +1,5 @@
 @if (!isExpanded) {
-  <span (dblclick)="expandInput()">{{ value }}</span>
+  <span (dblclick)="expandInput()">{{ currentValue.value }}</span>
 } @else {
-  <input type="{{ type }}" [(ngModel)]="value">
+  <input type="{{ type | inputType }}" [formControl]="currentValue">
 }

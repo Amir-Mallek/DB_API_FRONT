@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {DbConnectionService} from "./db-connection.service";
 import {Table} from "../model/table";
 import {map, Observable} from "rxjs";
-import {SelectResponse} from "../model/response/SelectResponse";
 import {Column} from "../model/column";
 
 @Injectable({
@@ -11,10 +10,34 @@ import {Column} from "../model/column";
 export class DbManagerService {
   constructor(private dbc: DbConnectionService) { }
 
-  private getType(type: string): string {
-    if (type == 'date' || type == 'time')  return type;
-    if (type == 'datetime') return 'datetime-local';
-    return 'text';
+  private buildOperand(primValues: any[], primaryKey: string, index: number) {
+    return {
+      type: 'condition',
+      op1: {
+        type: 'column',
+        name: primaryKey
+      },
+      op2: {
+        type: 'value',
+        value: primValues[index]
+      },
+      operator: '='
+    };
+  }
+
+  private buildCondition(primValues: any[], primaryKey: string, index: number): any {
+    if (index == primValues.length) {
+      return {
+        type: 'value',
+        value: false
+      };
+    }
+    return {
+      type: 'condition',
+      op1: this.buildOperand(primValues, primaryKey, index),
+      op2: this.buildCondition(primValues, primaryKey, index + 1),
+      operator: 'OR'
+    };
   }
 
   getSchemas(): Observable<string[]> {
@@ -55,9 +78,10 @@ export class DbManagerService {
         for (let row of response.data) {
           columns.push(new Column(
             row['Field'],
-            this.getType(row['Type']),
+            row['Type'],
             row['Null'] == 'YES',
-            row['Key'] == 'PRI'
+            row['Key'] == 'PRI',
+            row['Extra'] == 'auto_increment'
           ));
         }
         return columns;
@@ -69,7 +93,24 @@ export class DbManagerService {
     const query = { cols: [ '*' ] };
     return this.dbc.fetch(query, schema, table).pipe(
       map((response) => {
-          return response.data;
+        return response.data;
+      })
+    );
+  }
+
+  deleteRows(
+    schema: string,
+    table: string,
+    primValues: any[],
+    primaryKey: string
+  ): Observable<boolean> {
+    const query = {
+      where: this.buildCondition(primValues, primaryKey, 0)
+    };
+
+    return this.dbc.remove(query, schema, table).pipe(
+      map((response) => {
+        return response.status == 'SUCCESS';
       })
     );
   }

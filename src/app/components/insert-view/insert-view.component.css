@@ -4,14 +4,7 @@ div.row {
   font-size: large;
 }
 
-div.row:hover {
-  background-color: #FEEFAD;
-  border: #FDDE55 2px solid;
-  color: #03AED2;
-  cursor: pointer;
-}
-
-div.head, div.head:hover {
+div.head {
   border: #FDDE55 2px solid;
   background-color: #FDDE55;
   color: #03AED2;
@@ -19,4 +12,3 @@ div.head, div.head:hover {
   font-size: x-large;
   cursor: default;
 }
-

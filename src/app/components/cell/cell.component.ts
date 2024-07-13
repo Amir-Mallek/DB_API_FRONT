@@ -1,11 +1,14 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {FormsModule} from "@angular/forms";
+import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {InputTypePipe} from "../../pipes/input-type-pipe";
 
 @Component({
   selector: 'app-cell',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    InputTypePipe
   ],
   templateUrl: './cell.component.html',
   styleUrl: './cell.component.css'
@@ -15,14 +18,14 @@ export class CellComponent {
   @Input() type: string = 'text';
   @Input() index: number = 0;
   @Output() isModified = new EventEmitter();
-  value: string = '';
+  currentValue = new FormControl('');
   isExpanded: boolean = false;
   wasSame: Boolean = true;
 
   constructor(private elementRef: ElementRef) { }
 
   ngOnChanges() {
-    this.value = this.originalValue;
+    this.currentValue.setValue(this.originalValue);
   }
 
   expandInput() {
@@ -39,7 +42,7 @@ export class CellComponent {
   }
 
   handleChange() {
-    if (this.value != this.originalValue) {
+    if (this.currentValue.value != this.originalValue) {
       this.isModified.emit({
         index: this.index,
         change: (this.wasSame) ? -1 : 0

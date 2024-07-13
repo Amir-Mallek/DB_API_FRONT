@@ -2,10 +2,7 @@
   <h2>Schemas</h2>
   <ul class="list-group">
     @for (schema of schemas; track schema) {
-      <app-schema-item
-        [name]="schema"
-        [isSelected]="schema === getSelectedSchema()"
-      ></app-schema-item>
+      <app-schema-item [name]="schema"></app-schema-item>
     }
   </ul>
 </div>

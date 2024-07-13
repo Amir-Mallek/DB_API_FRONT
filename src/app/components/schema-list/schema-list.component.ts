@@ -15,10 +15,7 @@ import {DbManagerService} from "../../services/db-manager.service";
 export class SchemaListComponent {
   schemas: string[] = [];
 
-  constructor(
-    private selectedSchema: SelectSchemaService,
-    private manager: DbManagerService
-  ) { }
+  constructor(private manager: DbManagerService) { }
 
   ngOnInit() {
     this.manager.getSchemas().subscribe(
@@ -26,9 +23,5 @@ export class SchemaListComponent {
         this.schemas = response;
       }
     );
-  }
-
-  getSelectedSchema() {
-    return this.selectedSchema.name();
   }
 }
