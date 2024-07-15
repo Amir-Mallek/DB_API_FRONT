@@ -4,6 +4,7 @@ import {Table} from "../model/table";
 import {map, Observable, throwError} from "rxjs";
 import {Column} from "../model/column";
 import {UpdateResponse} from "../model/response/UpdateResponse";
+import {Operand} from "../model/where/operand";
 
 @Injectable({
   providedIn: 'root'
@@ -139,6 +140,27 @@ export class DbManagerService {
     };
 
     return this.dbc.remove(query, schema, table).pipe(
+      map((response) => {
+        if (response.status == 'SUCCESS') {
+          return response;
+        }
+        throw new Error(response.message);
+      })
+    );
+  }
+
+  updateValues(
+    schema: string,
+    table: string,
+    modifications: Record<string, any>,
+    where: Operand
+  ) {
+    const query = {
+      mods: modifications,
+      where: where
+    };
+
+    return this.dbc.update(query, schema, table).pipe(
       map((response) => {
         if (response.status == 'SUCCESS') {
           return response;

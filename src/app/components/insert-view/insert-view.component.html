@@ -6,7 +6,7 @@
     <a routerLink="/{{ schema }}/{{ table }}"> {{ table }}</a>
   </h1>
   <div class="container text-center mt-4">
-    <div class="row head">
+    <div class="row head m-2 rounded">
       <div class="col">Column</div>
       <div class="col">Type</div>
       <div class="col">Nullable</div>
@@ -14,7 +14,7 @@
       <div class="col">Value</div>
     </div>
     @for (column of columns; track column.name) {
-      <div class="row input-row">
+      <div class="row input-row rounded align-items-center">
         <div class="col">
           {{ column.name }}
           @if (column.isKey) {

@@ -28,6 +28,8 @@ export class UpdateViewComponent {
   columns: Column[] = [];
   updateForm: FormGroup = new FormGroup({});
   where: Operand;
+  queryStatus: boolean = false;
+  queryMessage: string = '';
 
   constructor(
     private tableDescription: TableDescriptionService,
@@ -65,6 +67,25 @@ export class UpdateViewComponent {
   }
 
   onSubmit() {
-    console.log(this.where);
+    let mods: Record<string, any> = {};
+    for (let column of this.columns) {
+      if (this.updateForm.value[column.name+'-checkbox']) {
+        mods[column.name] = this.updateForm.value[column.name];
+      }
+    }
+
+    this.manager.updateValues(this.schema, this.table, mods, this.where).subscribe(
+      {
+        next: (r) => {
+          this.queryStatus = true;
+          this.queryMessage = r.message + ". " + r.affectedRows + ' row(s) affected.';
+        },
+        error: (e) => {
+          this.queryStatus = false;
+          this.queryMessage = e.message;
+        },
+        complete: () => 1
+      }
+    );
   }
 }

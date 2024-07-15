@@ -7,7 +7,7 @@
     <span> Set</span>
   </h1>
   <div class="container text-center mt-4">
-    <div class="row head">
+    <div class="row head m-2 rounded">
       <div class="col-1">Include</div>
       <div class="col">Column</div>
       <div class="col">Type</div>
@@ -16,7 +16,7 @@
     </div>
     @for (column of columns; track column.name) {
       <div
-        class="row input-row"
+        class="row input-row rounded align-items-center"
         [class.disabled]="updateForm.get(column.name+'-checkbox')?.value === false"
       >
         <div class="col-1">
@@ -72,7 +72,7 @@
       </button>
     </div>
     <div class="col-5">
-      <app-query-result></app-query-result>
+      <app-query-result [success]="queryStatus" [message]="queryMessage"></app-query-result>
     </div>
   </div>
 </form>

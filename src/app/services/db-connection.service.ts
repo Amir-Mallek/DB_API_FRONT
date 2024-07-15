@@ -25,6 +25,11 @@ export class DbConnectionService {
     return this.http.post<UpdateResponse>(url, insertQuery);
   }
 
+  update(updateQuery: any, schema: string, table: string) {
+    const url = `http://localhost:8080/db-api/${schema}/${table}`;
+    return this.http.put<UpdateResponse>(url, updateQuery);
+  }
+
   showDb() {
     const url = 'http://localhost:8080/db-api/info';
     return this.http.get<SelectResponse>(url);
