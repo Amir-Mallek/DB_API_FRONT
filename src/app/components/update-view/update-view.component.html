@@ -1,20 +1,31 @@
-<form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
   <h1 class="p-3">
-    <span>Insert Into </span>
+    <span>Update </span>
     <a routerLink="/{{ schema }}">{{ schema }}</a>
      .
     <a routerLink="/{{ schema }}/{{ table }}"> {{ table }}</a>
+    <span> Set</span>
   </h1>
   <div class="container text-center mt-4">
     <div class="row head">
+      <div class="col-1">Include</div>
       <div class="col">Column</div>
       <div class="col">Type</div>
       <div class="col">Nullable</div>
-      <div class="col">Default</div>
       <div class="col">Value</div>
     </div>
     @for (column of columns; track column.name) {
-      <div class="row input-row">
+      <div
+        class="row input-row"
+        [class.disabled]="updateForm.get(column.name+'-checkbox')?.value === false"
+      >
+        <div class="col-1">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="{{ column.name+'-checkbox' }}"
+          >
+        </div>
         <div class="col">
           {{ column.name }}
           @if (column.isKey) {
@@ -28,13 +39,16 @@
           }
         </div>
         <div class="col">{{ (column.nullable ? 'YES' : 'NO') }}</div>
-        <div class="col">{{ column.defaultValue }}</div>
         <div class="col">
-          <input
-            class="form-control"
-            type="{{ column.type | inputType }}"
-            formControlName="{{ column.name }}"
-          >
+          @if (updateForm.get(column.name+'-checkbox')?.value) {
+            <input
+              class="form-control"
+              type="{{ column.type | inputType }}"
+              formControlName="{{ column.name }}"
+            >
+          } @else {
+            Not Included
+          }
         </div>
       </div>
     }
@@ -44,14 +58,12 @@
       <button
         class="btn btn-info"
         type="submit"
-        [disabled]="!insertForm.valid"
       >
-        Insert
+        Update
       </button>
     </div>
     <div class="col-5">
-      <app-query-result [success]="queryStatus" [message]="queryMessage"></app-query-result>
+      <app-query-result></app-query-result>
     </div>
   </div>
 </form>
-

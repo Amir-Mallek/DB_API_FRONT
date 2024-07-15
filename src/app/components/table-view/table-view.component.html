@@ -11,14 +11,12 @@
           <th>{{ column.name }}</th>
         }
       </tr>
-      @for (row of allRows; track row; let i = $index) {
+      @for (row of allRows; track row[primaryKey]; let i = $index) {
         <tr
           class="table-row"
-          [class]="rowsToDelete[i] ?
-          'bg-danger-subtle' :
-          (rowsToModify[i] ? 'bg-warning-subtle' : '')"
+          [class.bg-danger-subtle]="row['toDelete']"
         >
-          <th><input type="checkbox"  (change)="rowsToDelete[i]=!rowsToDelete[i]"></th>
+          <th><input type="checkbox"  (change)="row['toDelete']=!row['toDelete']"></th>
           @for (column of columns; track column.name) {
             <td class="p-1">
               <app-cell
@@ -26,7 +24,6 @@
                 [index]="i"
                 [originalValue]="row[column.name]"
                 [type]="column.type"
-                (isModified)="handleModification($event)"
               ></app-cell>
             </td>
           }
@@ -48,7 +45,10 @@
 
         <div class="row my-3">
           <div class="col">
-            <button class="btn btn-info m-2" (click)="goToInsert()">Insert</button>
+            <button class="btn btn-info m-2" (click)="goTo('insert')">Insert</button>
+          </div>
+          <div class="col">
+            <button class="btn btn-warning m-2" (click)="goTo('update')">Update</button>
           </div>
           <div class="col">
             <button class="btn btn-danger m-2" (click)="deleteRows()">Delete</button>

@@ -25,8 +25,6 @@ export class TableViewComponent {
   columns: Column[] = [];
   primaryKey: string = '';
   allRows: Record<string, any>[] = [];
-  rowsToModify: number[] = [];
-  rowsToDelete: boolean[] = [];
 
   queryStatus: boolean = false;
   queryMessage: string = '';
@@ -51,26 +49,21 @@ export class TableViewComponent {
     this.manager.getAllRows(this.schema, this.tableName).subscribe(
       (response) => {
         this.allRows = response;
-        this.rowsToModify = new Array(this.allRows.length).fill(0);
-        this.rowsToDelete = new Array(this.allRows.length).fill(false);
+        for (let row of this.allRows) {
+          row['toDelete'] = false;
+        }
       }
     );
   }
 
-  handleModification(description: any) {
-    this.rowsToModify[description.index] += description.change;
-    if (this.rowsToModify[description.index]) {
-      console.log('Row ' + description.index + ' is modified');
-    }
-  }
-
   deleteRows() {
     let primValues: any[] = [];
-    for (let i = 0; i < this.allRows.length; i++) {
-      if (this.rowsToDelete[i]) {
-        primValues.push(this.allRows[i][this.primaryKey]);
+    for (let row of this.allRows) {
+      if (row['toDelete']) {
+        primValues.push(row[this.primaryKey]);
       }
     }
+
     this.manager.deleteRows(
       this.schema,
       this.tableName,
@@ -81,6 +74,13 @@ export class TableViewComponent {
         next: (r) => {
           this.queryStatus = true;
           this.queryMessage = r.message + ". " + r.affectedRows + ' row(s) affected.';
+          let newRows: Record<string, any>[] = [];
+          for (let row of this.allRows) {
+            if (!row['toDelete']) {
+              newRows.push(row);
+            }
+          }
+          this.allRows = newRows;
         },
         error: (e) => {
           this.queryStatus = false;
@@ -92,9 +92,9 @@ export class TableViewComponent {
 
   }
 
-  goToInsert() {
+  goTo(destination: string) {
     this.tableDescription.set(this.columns);
-    this.router.navigate(['/insert', this.schema, this.tableName]).then();
+    this.router.navigate([destination, this.schema, this.tableName]).then();
   }
 
 }

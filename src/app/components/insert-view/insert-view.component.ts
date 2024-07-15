@@ -23,7 +23,7 @@ export class InsertViewComponent {
   @Input() schema = '';
   @Input() table = '';
   columns: Column[] = [];
-  insertForm : FormGroup = new FormGroup({});
+  insertForm: FormGroup = new FormGroup({});
 
   queryStatus: boolean = false;
   queryMessage: string = '';
