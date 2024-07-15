@@ -1,0 +1,29 @@
+span {
+  font-size: xx-large;
+  border: transparent 1px solid;
+  cursor: pointer;
+  user-select: none;
+}
+
+span.collapsed:hover {
+  background-color: var(--bs-info-bg-subtle);
+  border: #03AED2 1px solid;
+
+}
+
+span.content {
+  font-size: large;
+}
+
+.hovering {
+  background-color: var(--bs-info-bg-subtle);
+  border: #03AED2 1px solid;
+}
+
+input {
+  width: 8%;
+}
+
+.cols, .ops {
+  font-size: larger;
+}

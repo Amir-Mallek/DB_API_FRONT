@@ -1,0 +1,71 @@
+@if (type === 'col') {
+  <select class="cols" [formControl]="col">
+    <option></option>
+    @for (column of columns; track column.name) {
+      <option>{{ column.name }}</option>
+    }
+  </select>
+} @else if (type === 'val') {
+  <select style="width: 20px" [formControl]="valType">
+    <option>text</option>
+    <option>number</option>
+    <option>date</option>
+    <option>time</option>
+    <option>datetime-local</option>
+  </select>
+  <input type="{{ valType.value }}" [formControl]="val">
+} @else if (type === 'cond') {
+
+  <span
+    [hidden]="!isCollapsed"
+    class="collapsed"
+    (click)="isCollapsed=false"
+  >( ... )</span>
+
+  <span class="content" [hidden]="isCollapsed">
+    <span
+      [class.hovering]="isHovered"
+      (mouseenter)="isHovered = true"
+      (mouseleave)="isHovered = false"
+      (dblclick)="isCollapsed = true"
+    >( </span>
+    <select [formControl]="operandType1" class="bg-info rounded">
+      <option>col</option>
+      <option>val</option>
+      <option>cond</option>
+    </select>
+    <app-operand
+      [columns]="columns"
+      [type]="operandType1.value"
+      [nb]="2*nb"
+      [operand]="op1"
+    ></app-operand>
+
+    <select class="mx-3 ops" [formControl]="operator">
+      @for (operator of operators; track operator) {
+        <option>{{ operator }}</option>
+      }
+    </select>
+
+    <select [formControl]="operandType2" class="bg-info rounded">
+      <option>col</option>
+      <option>val</option>
+      <option>cond</option>
+    </select>
+    <app-operand
+      [columns]="columns"
+      [type]="operandType2.value"
+      [nb]="(2*nb)+1"
+      [operand]="op2"
+    ></app-operand>
+    <span
+      [class.hovering]="isHovered"
+      (mouseenter)="isHovered = true"
+      (mouseleave)="isHovered = false"
+      (dblclick)="isCollapsed = true"
+    > )</span>
+  </span>
+
+
+
+}

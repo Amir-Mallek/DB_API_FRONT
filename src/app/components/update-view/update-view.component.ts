@@ -6,6 +6,8 @@ import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {InputTypePipe} from "../../pipes/input-type-pipe";
 import {QueryResultComponent} from "../query-result/query-result.component";
 import {RouterLink} from "@angular/router";
+import {OperandComponent} from "../operand/operand.component";
+import {Operand} from "../../model/where/operand";
 
 @Component({
   selector: 'app-update-view',
@@ -14,7 +16,8 @@ import {RouterLink} from "@angular/router";
     InputTypePipe,
     QueryResultComponent,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    OperandComponent
   ],
   templateUrl: './update-view.component.html',
   styleUrl: './update-view.component.css'
@@ -24,11 +27,15 @@ export class UpdateViewComponent {
   @Input() table = '';
   columns: Column[] = [];
   updateForm: FormGroup = new FormGroup({});
+  where: Operand;
 
   constructor(
     private tableDescription: TableDescriptionService,
     private manager: DbManagerService
-  ) { }
+  ) {
+    this.where = new Operand();
+    this.where.type = 'condition'
+  }
 
   ngOnInit() {
     this.tableDescription.columns.subscribe(
@@ -58,6 +65,6 @@ export class UpdateViewComponent {
   }
 
   onSubmit() {
-    console.log('Update Submit');
+    console.log(this.where);
   }
 }
