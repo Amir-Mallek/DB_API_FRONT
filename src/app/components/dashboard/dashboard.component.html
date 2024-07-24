@@ -1,16 +1,15 @@
 <div class="container-fluid">
   <div class="row">
-    <nav class="col-3">
-      <h1
-        class="p-3"
-        style="cursor: pointer"
+    <nav class="col-2">
+      <h2
+        class="p-3 text-center"
         (click)="goHome()"
       >
         Database API
-      </h1>
+      </h2>
       <app-schema-list></app-schema-list>
     </nav>
-    <div class="col-9 content">
+    <div class="col content">
       <router-outlet></router-outlet>
     </div>
   </div>

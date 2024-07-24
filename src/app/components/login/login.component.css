@@ -15,6 +15,13 @@ button {
   font-weight: bold;
 }
 
+button:hover {
+  background-color: #FDDE55;
+  border-color: #FDDE55;
+  color: #03AED2;
+  font-weight: bold;
+}
+
 .container {
   width: 50%;
   font-weight: bold;

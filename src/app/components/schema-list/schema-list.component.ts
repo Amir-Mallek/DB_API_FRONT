@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {SchemaItemComponent} from "../schema-item/schema-item.component";
-import {SelectSchemaService} from "../../services/select-schema.service";
 import {DbManagerService} from "../../services/db-manager.service";
 
 @Component({

@@ -68,6 +68,7 @@ export class TableViewComponent {
       .subscribe(
         (response) => {
           this.tablePrivileges = response
+          console.log(this.tablePrivileges);
         }
       );
   }

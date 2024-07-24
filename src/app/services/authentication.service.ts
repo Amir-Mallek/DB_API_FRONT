@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {catchError, map, Observable, of, switchAll} from "rxjs";
-import {privilegesGuard} from "../guards/privileges.guard";
+import {map, Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +33,7 @@ export class AuthenticationService {
   }
 
   handleUnauthorized(returnUrl: string = '') {
+    this.privileges = null;
     localStorage.removeItem('access_token');
     this.router.navigate(
       ['login'],
@@ -42,6 +42,7 @@ export class AuthenticationService {
   }
 
   logout() {
+    this.privileges = null;
     localStorage.removeItem('access_token');
     this.router.navigate(['login']).then();
   }
