@@ -1,5 +1,2 @@
-@if (!isExpanded) {
-  <span (dblclick)="expandInput()">{{ currentValue.value }}</span>
-} @else {
-  <input type="{{ type | inputType }}" [formControl]="currentValue">
-}
+<span>{{ originalValue }}</span>
+

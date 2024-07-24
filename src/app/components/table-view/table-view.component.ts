@@ -9,6 +9,7 @@ import {QueryResultComponent} from "../query-result/query-result.component";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {AuthenticationService} from "../../services/authentication.service";
 import {Title} from "@angular/platform-browser";
+import {SelectSchemaService} from "../../services/select-schema.service";
 
 @Component({
   selector: 'app-table-view',
@@ -40,14 +41,16 @@ export class TableViewComponent {
     private router: Router,
     private tableDescription: TableDescriptionService,
     private authentication: AuthenticationService,
-    private title: Title
+    private title: Title,
+    private selectedSchema: SelectSchemaService
   ) { }
 
   ngOnChanges() {
     this.title.setTitle(this.schema + '.' + this.tableName);
+    this.selectedSchema.set(this.schema);
 
-    this.manager
-      .getTableDescription(this.schema, this.tableName)
+    this.tableDescription
+      .getColumns(this.schema, this.tableName)
       .subscribe(
         (response) => {
           this.columns = response;
@@ -98,6 +101,12 @@ export class TableViewComponent {
       }
     }
 
+    if (primValues.length === 0) {
+      this.queryStatus = false;
+      this.queryMessage = 'No row selected.';
+      return;
+    }
+
     this.manager.deleteRows(
       this.schema,
       this.tableName,
@@ -127,7 +136,6 @@ export class TableViewComponent {
   }
 
   goTo(destination: string) {
-    this.tableDescription.set(this.columns);
     this.router.navigate([destination, this.schema, this.tableName]).then();
   }
 

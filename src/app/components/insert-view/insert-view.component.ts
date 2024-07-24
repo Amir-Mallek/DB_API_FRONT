@@ -7,6 +7,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {QueryResultComponent} from "../query-result/query-result.component";
 import {RouterLink} from "@angular/router";
 import {Title} from "@angular/platform-browser";
+import {SelectSchemaService} from "../../services/select-schema.service";
 
 @Component({
   selector: 'app-insert-view',
@@ -32,27 +33,22 @@ export class InsertViewComponent {
   constructor(
     private tableDescription: TableDescriptionService,
     private manager: DbManagerService,
-    private title: Title
+    private title: Title,
+    private selectedSchema: SelectSchemaService
   ) { }
 
   ngOnChanges() {
     this.title.setTitle('Insert into ' + this.schema + '.' + this.table);
+    this.selectedSchema.set(this.schema);
 
-    this.tableDescription.columns.subscribe(
-      (response) => {
-        if (response.length == 0) {
-          this.manager.getTableDescription(this.schema, this.table).subscribe(
-            (response) => {
-              this.columns = response;
-              this.setFormControls();
-            }
-          );
-        } else {
+    this.tableDescription
+      .getColumns(this.schema, this.table)
+      .subscribe(
+        (response) => {
           this.columns = response;
           this.setFormControls();
         }
-      }
-    );
+      );
   }
 
   setFormControls(): void {

@@ -1,8 +1,9 @@
 <div class="d-flex flex-column" style="height: 100vh;">
   <div class="flex-grow-1 overflow-auto">
     <h1 class="p-3">
-      <a routerLink="/{{ schema }}"> {{ schema }}</a>
-      > {{ tableName }}
+      <a routerLink="/{{ schema }}">{{ schema }}</a>
+      .
+      <a routerLink="/{{ schema }}/{{ tableName }}"> {{ tableName }}</a>
     </h1>
     <table class="table">
       <tr class="table-head">
@@ -28,7 +29,6 @@
             <td class="p-1">
               <app-cell
                 class="cell"
-                [index]="i"
                 [originalValue]="row[column.name]"
                 [type]="column.type"
               ></app-cell>

@@ -1,17 +1,32 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, map, of} from "rxjs";
 import {Column} from "../model/column";
+import {DbManagerService} from "./db-manager.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableDescriptionService {
-  private tableDescription = new BehaviorSubject<Column[]>([]);
-  columns = this.tableDescription.asObservable();
+  currentSchema: string = '';
+  currentTable: string = '';
+  columns: Column[] = [];
 
-  constructor() { }
+  constructor(private manager: DbManagerService) { }
 
-  set(description: Column[]) {
-    this.tableDescription.next(description);
+  getColumns(schema: string, table: string) {
+    if (this.currentSchema != schema || this.currentTable != table || this.columns.length === 0) {
+      this.currentSchema = schema;
+      this.currentTable = table;
+      return this.manager
+        .getTableDescription(schema, table)
+        .pipe(
+          map((response) => {
+            this.columns = response;
+            return this.columns;
+          })
+        );
+    }
+    return of(this.columns);
   }
+
 }

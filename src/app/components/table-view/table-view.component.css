@@ -28,12 +28,12 @@ input[type=number] {
 
 
 a {
-  color: black;
+  color: #03AED2;
   text-decoration-color: white;
 }
 
 a:hover {
-  text-decoration-color: black;
+  text-decoration-color: #03AED2;
   transition: text-decoration-color .3s ease;
 }
 

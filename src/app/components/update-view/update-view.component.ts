@@ -9,6 +9,7 @@ import {RouterLink} from "@angular/router";
 import {OperandComponent} from "../operand/operand.component";
 import {Operand} from "../../model/where/operand";
 import {Title} from "@angular/platform-browser";
+import {SelectSchemaService} from "../../services/select-schema.service";
 
 @Component({
   selector: 'app-update-view',
@@ -35,7 +36,8 @@ export class UpdateViewComponent {
   constructor(
     private tableDescription: TableDescriptionService,
     private manager: DbManagerService,
-    private title: Title
+    private title: Title,
+    private selectedSchema: SelectSchemaService
   ) {
     this.where = new Operand();
     this.where.type = 'condition'
@@ -43,22 +45,16 @@ export class UpdateViewComponent {
 
   ngOnChanges() {
     this.title.setTitle('Update ' + this.schema + '.' + this.table);
+    this.selectedSchema.set(this.schema);
 
-    this.tableDescription.columns.subscribe(
-      (response) => {
-        if (response.length == 0) {
-          this.manager.getTableDescription(this.schema, this.table).subscribe(
-            (response) => {
-              this.columns = response;
-              this.setFormControls();
-            }
-          );
-        } else {
+    this.tableDescription
+      .getColumns(this.schema, this.table)
+      .subscribe(
+        (response) => {
           this.columns = response;
           this.setFormControls();
         }
-      }
-    );
+      );
   }
 
   private setFormControls(): void {

@@ -13,7 +13,7 @@ export const unauthorizedRequestInterceptor: HttpInterceptorFn = (req, next) => 
       } else if (error.status === 401) {
         authentication.handleUnauthorized();
       }
-      throw new Error('Unauthorized Access!');
+      throw new Error(error['message']);
     })
   );
 };

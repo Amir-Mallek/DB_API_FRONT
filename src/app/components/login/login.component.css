@@ -1,0 +1,21 @@
+h1 {
+  color: #03AED2;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+label {
+  color: #03AED2;
+}
+
+button {
+  background-color: #FDDE55;
+  border-color: #FDDE55;
+  color: #03AED2;
+  font-weight: bold;
+}
+
+.container {
+  width: 50%;
+  font-weight: bold;
+}
