@@ -11,5 +11,5 @@ import {HomePageComponent} from "./components/home-page/home-page.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'DB-Admin';
+
 }

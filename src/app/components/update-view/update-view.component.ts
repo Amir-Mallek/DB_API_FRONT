@@ -8,6 +8,7 @@ import {QueryResultComponent} from "../query-result/query-result.component";
 import {RouterLink} from "@angular/router";
 import {OperandComponent} from "../operand/operand.component";
 import {Operand} from "../../model/where/operand";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-update-view',
@@ -33,13 +34,16 @@ export class UpdateViewComponent {
 
   constructor(
     private tableDescription: TableDescriptionService,
-    private manager: DbManagerService
+    private manager: DbManagerService,
+    private title: Title
   ) {
     this.where = new Operand();
     this.where.type = 'condition'
   }
 
-  ngOnInit() {
+  ngOnChanges() {
+    this.title.setTitle('Update ' + this.schema + '.' + this.table);
+
     this.tableDescription.columns.subscribe(
       (response) => {
         if (response.length == 0) {

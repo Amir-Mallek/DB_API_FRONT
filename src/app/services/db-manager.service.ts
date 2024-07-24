@@ -92,11 +92,17 @@ export class DbManagerService {
     );
   }
 
-  getAllRows(schema: string, table: string): Observable<Record<string, any>[]> {
-    const query = { cols: [ '*' ] };
+  getAllRows(schema: string, table: string, limit: number): Observable<Record<string, any>[]> {
+    const query = {
+      cols: [ '*' ],
+      limit: limit
+    };
     return this.dbc.fetch(query, schema, table).pipe(
       map((response) => {
-        return response.data;
+        if (response.status == 'SUCCESS') {
+          return response.data;
+        }
+        throw new Error(response.message);
       })
     );
   }
@@ -117,8 +123,7 @@ export class DbManagerService {
     const query = {
       cols: columnNames,
       values: [row]
-    }
-
+    };
     return this.dbc.save(query, schema, table).pipe(
       map((response) => {
         if (response.status == 'SUCCESS') {

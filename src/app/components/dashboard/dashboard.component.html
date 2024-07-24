@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-3">
+      <h1
+        class="p-3"
+        style="cursor: pointer"
+        (click)="goHome()"
+      >
+        Database API
+      </h1>
+      <app-schema-list></app-schema-list>
+    </nav>
+    <div class="col-9 content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

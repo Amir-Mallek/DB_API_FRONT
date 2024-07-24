@@ -5,6 +5,7 @@ import {DbManagerService} from "../../services/db-manager.service";
 import {DatePipe} from "@angular/common";
 import {TableSizePipe} from "../../pipes/table-size-pipe";
 import {throwIfEmpty} from "rxjs";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-schema-view',
@@ -23,10 +24,12 @@ export class SchemaViewComponent {
 
   constructor(
     private manager: DbManagerService,
-    private router: Router
+    private router: Router,
+    private title: Title
   ) { }
 
   ngOnChanges() {
+    this.title.setTitle(this.schema);
     this.manager.getTables(this.schema).subscribe(
       (response) => {
         this.tables = response;

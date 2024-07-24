@@ -16,7 +16,7 @@ export class DbConnectionService {
   }
 
   remove(deleteQuery: any, schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/${schema}/${table}/delete`;
+    const url = `http://localhost:8080/db-api/delete/${schema}/${table}`;
     return this.http.patch<UpdateResponse>(url, deleteQuery);
   }
 

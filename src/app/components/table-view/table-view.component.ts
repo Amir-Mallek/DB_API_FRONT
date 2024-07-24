@@ -6,6 +6,9 @@ import {NgClass} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {TableDescriptionService} from "../../services/table-description.service";
 import {QueryResultComponent} from "../query-result/query-result.component";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
+import {AuthenticationService} from "../../services/authentication.service";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-table-view',
@@ -14,7 +17,8 @@ import {QueryResultComponent} from "../query-result/query-result.component";
     CellComponent,
     NgClass,
     RouterLink,
-    QueryResultComponent
+    QueryResultComponent,
+    ReactiveFormsModule
   ],
   templateUrl: './table-view.component.html',
   styleUrl: './table-view.component.css'
@@ -25,6 +29,8 @@ export class TableViewComponent {
   columns: Column[] = [];
   primaryKey: string = '';
   allRows: Record<string, any>[] = [];
+  nbRows: FormControl = new FormControl(0);
+  tablePrivileges: Record<string, boolean> = {};
 
   queryStatus: boolean = false;
   queryMessage: string = '';
@@ -32,26 +38,54 @@ export class TableViewComponent {
   constructor(
     private manager: DbManagerService,
     private router: Router,
-    private tableDescription: TableDescriptionService
+    private tableDescription: TableDescriptionService,
+    private authentication: AuthenticationService,
+    private title: Title
   ) { }
 
   ngOnChanges() {
-    this.manager.getTableDescription(this.schema, this.tableName).subscribe(
-      (response) => {
-        this.columns = response;
-        let primColumn = this.columns.find(column => column.isKey);
-        if (primColumn) {
-          this.primaryKey = primColumn.name;
-        }
-      }
-    );
+    this.title.setTitle(this.schema + '.' + this.tableName);
 
-    this.manager.getAllRows(this.schema, this.tableName).subscribe(
-      (response) => {
-        this.allRows = response;
-        for (let row of this.allRows) {
-          row['toDelete'] = false;
+    this.manager
+      .getTableDescription(this.schema, this.tableName)
+      .subscribe(
+        (response) => {
+          this.columns = response;
+          let primColumn = this.columns.find(column => column.isKey);
+          if (primColumn) {
+            this.primaryKey = primColumn.name;
+          }
         }
+      );
+
+    this.fetchRows(100);
+
+    this.authentication
+      .getTablePrivileges(this.schema, this.tableName)
+      .subscribe(
+        (response) => {
+          this.tablePrivileges = response
+        }
+      );
+  }
+
+  fetchRows(limit: number) {
+    this.manager.getAllRows(this.schema, this.tableName, limit).subscribe(
+      {
+        next: (r) => {
+          this.allRows = r;
+          this.queryStatus = true;
+          this.queryMessage = r.length + ' row(s) fetched.';
+          for (let row of this.allRows) {
+            row['toDelete'] = false;
+          }
+          this.nbRows.setValue(this.allRows.length);
+        },
+        error: (e) => {
+          this.queryStatus = false;
+          this.queryMessage = e.message;
+        },
+        complete: () => 1
       }
     );
   }

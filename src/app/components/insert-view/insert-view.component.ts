@@ -6,6 +6,7 @@ import {DbManagerService} from "../../services/db-manager.service";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {QueryResultComponent} from "../query-result/query-result.component";
 import {RouterLink} from "@angular/router";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-insert-view',
@@ -30,10 +31,13 @@ export class InsertViewComponent {
 
   constructor(
     private tableDescription: TableDescriptionService,
-    private manager: DbManagerService
+    private manager: DbManagerService,
+    private title: Title
   ) { }
 
-  ngOnInit() {
+  ngOnChanges() {
+    this.title.setTitle('Insert into ' + this.schema + '.' + this.table);
+
     this.tableDescription.columns.subscribe(
       (response) => {
         if (response.length == 0) {
