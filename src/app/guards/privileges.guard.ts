@@ -19,7 +19,13 @@ export const privilegesGuard: CanActivateFn = (route, state) => {
       .pipe(
         map((response) => {
           if (!response[operation.toUpperCase()]) {
-            router.navigate([]).then();
+            router.navigate([''], {
+              queryParams: {
+                schema: schema,
+                table: table,
+                operation: operation
+              }
+            }).then();
             return false;
           }
           return true;
