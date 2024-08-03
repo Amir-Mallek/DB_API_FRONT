@@ -1,0 +1,26 @@
+<div class="form-floating">
+  <textarea
+    #console
+    class="form-control"
+    [class.is-invalid]="!queryResult"
+    id="floatingTextarea"
+    [formControl]="sql"
+    (keydown)="onKeyDown($event)"
+  ></textarea>
+  <label for="floatingTextarea">Console</label>
+</div>
+<button class="btn btn-dark my-3" (click)="onExecute()">Execute</button>
+<span class="ms-3">Press Ctrl+Enter to execute query.</span>
+<app-query-result [success]="queryResult" [message]="queryMessage"></app-query-result>
+<div [hidden]="!showData">
+  <h3>Fetched Rows:</h3>
+  @for (row of data; track row) {
+    <p>
+      <span class="row-nb">{{ $index+1 }}- </span>
+      @for (key of getKeys(row); track key;) {
+        <span class="key">{{ key }}: </span> {{ row[key] }}
+        @if (!$last) { , }
+      }
+    </p>
+  }
+</div>

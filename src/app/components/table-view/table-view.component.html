@@ -12,7 +12,7 @@
           <th>{{ column.name }}</th>
         }
       </tr>
-      @for (row of allRows; track row[primaryKey]; let i = $index) {
+      @for (row of allRows; track row; let i = $index) {
         <tr
           class="table-row"
           [class.bg-danger-subtle]="row['toDelete']"
@@ -38,10 +38,12 @@
       }
     </table>
   </div>
-  <div class="container">
-    <div class="row pt-3">
-      <div class="col-5">
-
+  <div class="container fixed-container">
+    <div
+      class="row pt-3 console"
+      [hidden]="consoleIsCollapsed"
+    >
+      <div class="col-4">
         <div class="row pe-5">
           <div class="input-group ps-5">
             <span class="input-group-text">Number of rows</span>
@@ -58,39 +60,75 @@
             </button>
           </div>
         </div>
-
         <div class="row my-3">
-          <div class="col">
+          <div class="col-3">
             <button
-              class="btn btn-info m-2"
+              class="btn btn-info "
               (click)="goTo('insert')"
               [hidden]="!tablePrivileges['INSERT']"
             >Insert</button>
           </div>
-          <div class="col">
+          <div class="col-3">
             <button
-              class="btn btn-warning m-2"
+              class="btn btn-warning "
               (click)="goTo('update')"
               [hidden]="!tablePrivileges['UPDATE']"
             >
               Update
             </button>
           </div>
-          <div class="col">
+          <div class="col-3">
             <button
-              class="btn btn-danger m-2"
+              class="btn btn-danger "
               (click)="deleteRows()"
               [hidden]="!tablePrivileges['DELETE']"
             >
               Delete
             </button>
           </div>
+          <div class="col-3">
+            <button
+              class="btn btn-dark "
+              (click)="openFilter()"
+            >
+              Filter
+            </button>
+          </div>
         </div>
-
       </div>
-
-      <div class="col-5">
+      <div class="col-4">
         <app-query-result [success]="queryStatus" [message]="queryMessage"></app-query-result>
+      </div>
+    </div>
+    <div
+      class="row pt-3 filter"
+      [hidden]="!consoleIsCollapsed"
+    >
+      <div class="col-1"></div>
+      <div class="col-3">
+        <div class="row my-3">
+          <div class="col">
+            <button
+              class="btn btn-danger"
+              (click)="consoleIsCollapsed = !consoleIsCollapsed"
+            >
+              Return
+            </button>
+          </div>
+          <div class="col">
+            <button class="btn btn-success">Fetch</button>
+          </div>
+        </div>
+        <div class="row pe-5"><p>Press Ctrl+Enter to fetch data</p></div>
+      </div>
+      <div class="col form-floating">
+        <div class="form-floating">
+          <textarea
+            class="form-control"
+            id="floatingTextarea"
+          ></textarea>
+          <label for="floatingTextarea">WHERE:</label>
+        </div>
       </div>
     </div>
   </div>

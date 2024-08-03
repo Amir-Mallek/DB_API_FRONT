@@ -1,7 +1,12 @@
 div.row.input-row {
   margin: 1vh;
+  height: 5vh;
   border: #03AED2 2px solid;
   font-size: large;
+}
+
+input.form-control {
+  height: 4vh;
 }
 
 div.head {

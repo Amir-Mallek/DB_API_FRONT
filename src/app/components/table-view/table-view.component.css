@@ -38,9 +38,27 @@ a:hover {
 }
 
 button {
-  font-size: x-large;
+  font-size: large;
 }
 
-span {
-  font-size: x-large;
+.fixed-container {
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+  background-color: whitesmoke;
+}
+
+textarea {
+  font-family: Consolas, serif;
+  box-shadow: none !important;
+  border: 1px solid black !important;
+  height: 15vh !important;
+}
+
+label {
+  color: black !important;
+  font-family: Consolas, serif;
+  font-weight: bold;
+}
+
+p {
+  font-family: Consolas, serif;
 }

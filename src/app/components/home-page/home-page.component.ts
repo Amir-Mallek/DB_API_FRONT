@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import {AuthenticationService} from "../../services/authentication.service";
 import {SelectSchemaService} from "../../services/select-schema.service";
 import {ActivatedRoute} from "@angular/router";
+import {ConsoleComponent} from "../console/console.component";
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [],
+  imports: [
+    ConsoleComponent
+  ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })

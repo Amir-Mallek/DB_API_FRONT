@@ -32,6 +32,7 @@ export class TableViewComponent {
   allRows: Record<string, any>[] = [];
   nbRows: FormControl = new FormControl(0);
   tablePrivileges: Record<string, boolean> = {};
+  consoleIsCollapsed: boolean = false;
 
   queryStatus: boolean = false;
   queryMessage: string = '';
@@ -137,6 +138,10 @@ export class TableViewComponent {
 
   goTo(destination: string) {
     this.router.navigate([destination, this.schema, this.tableName]).then();
+  }
+
+  openFilter() {
+    this.consoleIsCollapsed = !this.consoleIsCollapsed;
   }
 
 }

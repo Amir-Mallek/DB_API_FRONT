@@ -1,16 +1,24 @@
-<div class="container text-center" style="padding: 35vh">
-  <h1 class="text-center" style="font-weight: bolder">Welcome {{ username }}</h1>
-  <button
-    class="btn btn-danger"
-    (click)="logout()"
-  >
-    Logout
-  </button>
-  <div [hidden]="!unauthorized" class="alert alert-danger mt-5">
-    <h3>Unauthorized Action</h3>
-    You are not authorized to execute
-    <strong>{{ unauthedOp.toUpperCase() }}</strong> on
-    <strong>{{ unauthedSchema }}.{{ unauthedTable }}</strong>
+<div class="d-flex flex-column" style="height: 100vh;">
+  <div class="flex-grow-1 welcome">
+    <div class="text-center py-5">
+      <h1 class="text-center" style="font-weight: bolder">Welcome {{ username }}</h1>
+      <button
+        class="btn btn-danger"
+        (click)="logout()"
+      >
+        Logout
+      </button>
+      <div [hidden]="!unauthorized" class="alert alert-danger mt-5">
+        <h3>Unauthorized Action</h3>
+        You are not authorized to execute
+        <strong>{{ unauthedOp.toUpperCase() }}</strong> on
+        <strong>{{ unauthedSchema }}.{{ unauthedTable }}</strong>
+      </div>
+    </div>
+  </div>
+  <div class="container console pt-2 overflow-y-auto">
+    <app-console></app-console>
   </div>
 </div>
+
 

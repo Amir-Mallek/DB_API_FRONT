@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SelectResponse} from "../model/response/SelectResponse";
 import {UpdateResponse} from "../model/response/UpdateResponse";
+import {DbResponse} from "../model/response/DbResponse";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -45,4 +47,8 @@ export class DbConnectionService {
     return this.http.get<SelectResponse>(url);
   }
 
+  execute(sql: string): Observable<DbResponse> {
+    const url = "http://localhost:8080/db-api/execute";
+    return this.http.post<DbResponse>(url, sql);
+  }
 }
