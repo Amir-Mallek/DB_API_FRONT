@@ -89,7 +89,7 @@
           <div class="col-3">
             <button
               class="btn btn-dark "
-              (click)="openFilter()"
+              (click)="consoleIsCollapsed = true"
             >
               Filter
             </button>
@@ -110,13 +110,18 @@
           <div class="col">
             <button
               class="btn btn-danger"
-              (click)="consoleIsCollapsed = !consoleIsCollapsed"
+              (click)="consoleIsCollapsed = false"
             >
               Return
             </button>
           </div>
           <div class="col">
-            <button class="btn btn-success">Fetch</button>
+            <button
+              class="btn btn-success"
+              (click)="onFetch()"
+            >
+              Fetch
+            </button>
           </div>
         </div>
         <div class="row pe-5"><p>Press Ctrl+Enter to fetch data</p></div>
@@ -126,8 +131,10 @@
           <textarea
             class="form-control"
             id="floatingTextarea"
+            [formControl]="whereClause"
+            (keydown)="onKeyDown($event)"
           ></textarea>
-          <label for="floatingTextarea">WHERE:</label>
+          <label for="floatingTextarea">WHERE</label>
         </div>
       </div>
     </div>

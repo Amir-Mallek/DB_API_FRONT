@@ -10,6 +10,8 @@ import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {AuthenticationService} from "../../services/authentication.service";
 import {Title} from "@angular/platform-browser";
 import {SelectSchemaService} from "../../services/select-schema.service";
+import {DbConnectionService} from "../../services/db-connection.service";
+import {SelectResponse} from "../../model/response/SelectResponse";
 
 @Component({
   selector: 'app-table-view',
@@ -32,13 +34,16 @@ export class TableViewComponent {
   allRows: Record<string, any>[] = [];
   nbRows: FormControl = new FormControl(0);
   tablePrivileges: Record<string, boolean> = {};
+
   consoleIsCollapsed: boolean = false;
+  whereClause: FormControl = new FormControl('');
 
   queryStatus: boolean = false;
   queryMessage: string = '';
 
   constructor(
     private manager: DbManagerService,
+    private dbc: DbConnectionService,
     private router: Router,
     private tableDescription: TableDescriptionService,
     private authentication: AuthenticationService,
@@ -77,13 +82,7 @@ export class TableViewComponent {
     this.manager.getAllRows(this.schema, this.tableName, limit).subscribe(
       {
         next: (r) => {
-          this.allRows = r;
-          this.queryStatus = true;
-          this.queryMessage = r.length + ' row(s) fetched.';
-          for (let row of this.allRows) {
-            row['toDelete'] = false;
-          }
-          this.nbRows.setValue(this.allRows.length);
+          this.assignNewRows(r);
         },
         error: (e) => {
           this.queryStatus = false;
@@ -140,8 +139,39 @@ export class TableViewComponent {
     this.router.navigate([destination, this.schema, this.tableName]).then();
   }
 
-  openFilter() {
-    this.consoleIsCollapsed = !this.consoleIsCollapsed;
+  onFetch() {
+    let sql = `SELECT * from \`${this.schema}\`.\`${this.tableName}\` WHERE `;
+    sql += this.whereClause.value;
+    this.dbc.execute(sql)
+      .subscribe(res => {
+        if (res.status == 'SUCCESS') {
+          if ((res as SelectResponse).data) {
+            this.assignNewRows((res as SelectResponse).data);
+          } else {
+            this.assignNewRows([]);
+          }
+        } else {
+          this.queryStatus = false;
+          this.queryMessage = res.message;
+        }
+      });
+    this.consoleIsCollapsed = false;
+  }
+
+  assignNewRows(newRows: any[]) {
+    this.allRows = newRows;
+    this.queryStatus = true;
+    this.queryMessage = newRows.length + ' row(s) fetched.';
+    for (let row of this.allRows) {
+      row['toDelete'] = false;
+    }
+    this.nbRows.setValue(this.allRows.length);
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'Enter') {
+      this.onFetch();
+    }
   }
 
 }
