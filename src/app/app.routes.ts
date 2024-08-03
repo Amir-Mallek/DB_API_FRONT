@@ -28,16 +28,6 @@ export const routes: Routes = [
         component: HomePageComponent
       },
       {
-        path: 'insert/:schema/:table',
-        title: 'insert',
-        component: InsertViewComponent
-      },
-      {
-        path: 'update/:schema/:table',
-        title: 'update',
-        component: UpdateViewComponent
-      },
-      {
         path: ':schema',
         component: SchemaViewComponent,
         title: 'schema',
@@ -46,6 +36,16 @@ export const routes: Routes = [
         path: ':schema/:tableName',
         title: 'table',
         component: TableViewComponent
+      },
+      {
+        path: ':schema/:table/insert',
+        title: 'insert',
+        component: InsertViewComponent
+      },
+      {
+        path: ':schema/:table/update',
+        title: 'update',
+        component: UpdateViewComponent
       }
     ]
   }

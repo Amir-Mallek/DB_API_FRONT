@@ -136,7 +136,7 @@ export class TableViewComponent {
   }
 
   goTo(destination: string) {
-    this.router.navigate([destination, this.schema, this.tableName]).then();
+    this.router.navigate([this.schema, this.tableName, destination]).then();
   }
 
   onFetch() {

@@ -11,9 +11,9 @@ export const privilegesGuard: CanActivateFn = (route, state) => {
     segments.push(segment.path);
   }
   if (segments.length >= 2) {
-    const schema = (segments.length === 3) ? segments[1] : segments[0];
-    const table = (segments.length === 3) ? segments[2] : segments[1];
-    const operation = (segments.length === 3) ? segments[0] : 'select';
+    const schema = segments[0];
+    const table = segments[1];
+    const operation = (segments.length === 3) ? segments[2] : 'select';
     return authentication
       .getTablePrivileges(schema, table)
       .pipe(
