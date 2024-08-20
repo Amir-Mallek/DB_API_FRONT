@@ -16,7 +16,7 @@ export class AuthenticationService {
   ) { }
 
   authenticate(username: string, password: string) {
-    const url = 'http://localhost:8080/db-api/login';
+    const url = 'http://192.168.100.20:8080/db-api/login';
     this.inLoginOperation = true;
     return this.http.post<Record<string, string>>(url, null,{
       headers: {
@@ -84,7 +84,7 @@ export class AuthenticationService {
 
   getPrivileges(): Observable<Record<string, Record<string, string[]>>>  {
     if (this.privileges !== null) return of(this.privileges);
-    const url = 'http://localhost:8080/db-api/info/privileges';
+    const url = 'http://api:8080/db-api/info/privileges';
     return this.http.get<Record<string, Record<string, string[]>>>(url).pipe(
       map((response) => {
         this.privileges = response;

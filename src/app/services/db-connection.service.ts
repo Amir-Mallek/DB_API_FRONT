@@ -9,46 +9,47 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class DbConnectionService {
+  private baseUrl: string = 'http://192.168.100.20:8080/db-api';
 
   constructor(private http: HttpClient) { }
 
   fetch(selectQuery: any, schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/${schema}/${table}`;
+    const url = `${this.baseUrl}/${schema}/${table}`;
     return this.http.patch<SelectResponse>(url, selectQuery);
   }
 
   remove(deleteQuery: any, schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/delete/${schema}/${table}`;
+    const url = `${this.baseUrl}/delete/${schema}/${table}`;
     return this.http.patch<UpdateResponse>(url, deleteQuery);
   }
 
   save(insertQuery: any, schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/${schema}/${table}`;
+    const url = `${this.baseUrl}/${schema}/${table}`;
     return this.http.post<UpdateResponse>(url, insertQuery);
   }
 
   update(updateQuery: any, schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/${schema}/${table}`;
+    const url = `${this.baseUrl}/${schema}/${table}`;
     return this.http.put<UpdateResponse>(url, updateQuery);
   }
 
   showDb() {
-    const url = 'http://localhost:8080/db-api/info';
+    const url = `${this.baseUrl}/info`;
     return this.http.get<SelectResponse>(url);
   }
 
   showTables(schema: string) {
-    const url = `http://localhost:8080/db-api/info/${schema}`;
+    const url = `${this.baseUrl}/info/${schema}`;
     return this.http.get<SelectResponse>(url);
   }
 
   describeTable(schema: string, table: string) {
-    const url = `http://localhost:8080/db-api/info/${schema}/${table}`;
+    const url = `${this.baseUrl}/info/${schema}/${table}`;
     return this.http.get<SelectResponse>(url);
   }
 
   execute(sql: string): Observable<DbResponse> {
-    const url = "http://localhost:8080/db-api/execute";
+    const url = `${this.baseUrl}/execute`;
     return this.http.post<DbResponse>(url, sql);
   }
 }

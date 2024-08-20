@@ -1,0 +1,12 @@
+# Node modules
+node_modules
+
+.angular
+
+# Output of 'ng build'
+dist
+
+# IDEs and editors
+.idea
+.vscode/
+
